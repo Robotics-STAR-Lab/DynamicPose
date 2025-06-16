@@ -5,7 +5,7 @@
     </h1>
     <h2>DynamicPose: Real-time and Robust 6D Object Pose Tracking for Fast-Moving Cameras and Objects</h2>
         <p align="center">
-        <strong><span style="font-size: 20px;">The paper is Accepted by <em>IROS 2025</em> </span></strong>
+        <strong><span style="font-size: 20px;">Accepted to <em>IROS 2025</em> </span></strong>
         </p>
     <br>
         <a href="https://robotics-star.com/people" target="_blank">Tingbang Liang</a><sup>1,2,*</sup>,
