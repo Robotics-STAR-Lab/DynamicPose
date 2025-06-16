@@ -62,7 +62,8 @@
 ## Demo
 
 Real-world:
-https://github.com/Robotics-STAR-Lab/DynamicPose/blob/master/assets/real_compare
+
+https://github.com/user-attachments/assets/96632f53-6c87-4a5a-aa3f-f63a80827314
 
 
 --- 
