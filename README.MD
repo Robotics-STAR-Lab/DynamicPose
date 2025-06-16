@@ -63,7 +63,11 @@
 
 Real-world:
 
-https://github.com/user-attachments/assets/96632f53-6c87-4a5a-aa3f-f63a80827314
+https://github.com/user-attachments/assets/1c821b64-d0db-4fff-8de0-ab1628f2eb4a
+
+Pose Tracking Comparison:
+
+https://github.com/user-attachments/assets/4de948b9-9d42-412a-80cb-8a1b50dcb52b
 
 
 --- 
