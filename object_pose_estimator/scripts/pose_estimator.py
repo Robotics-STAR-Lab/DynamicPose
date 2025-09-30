@@ -2,7 +2,6 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../include/FoundationPose'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '../include/Utils'))
-# sys.path.append(os.path.join(os.path.dirname(__file__), '../include/MegaPose'))
 
 import rospy
 import torch
@@ -12,7 +11,7 @@ import time
 from cv_bridge import CvBridge
 import message_filters
 import sensor_msgs.msg, geometry_msgs.msg, visualization_msgs.msg, std_msgs.msg
-from std_msgs.msg import Int32
+from std_msgs.msg import Int32, Bool
 from nav_msgs.msg import Odometry
 from collections import deque
 import cv2
@@ -127,6 +126,8 @@ class poseEstimator:
         ### camera info
         self._cam_info_sub_ = rospy.Subscriber(config['topics']['cam_info'], sensor_msgs.msg.CameraInfo, self.cam_info_callback_)
         self.traking_pub_ = rospy.Publisher(config['topics']['traking_result'], geometry_msgs.msg.PoseStamped, queue_size=10)
+        self.toggle_play_pub_ = rospy.Publisher("/toggle_play", Bool, queue_size=10)
+        
         ### for debug
         self.debug = config['debug']
         self.debug_dir = config['debug_dir'] + '/poseEstimator'
@@ -150,11 +151,16 @@ class poseEstimator:
         self.last_timestamp = None
         self.cam_info_done = False
         # self.pose_predictor.warmup()
+        rospy.sleep(0.5)  # 等待 subscriber 连接
         rospy.loginfo(" Pose Estimator initialization done")
         print(f'\033[32m############ CONFIG ##############\033[0m')
         print(f'\033[32m####### NO_VINS = {NO_VINS} ######\033[0m')
         print(f'\033[32m# NO_2D_TRACKER = {NO_2D_TRACKER} #########\033[0m')
         print(f'\033[32m######### NO_KF = {NO_KF} ########\033[0m')
+        self.toggle_play_pub_.publish(Bool(data=True)) # start playing
+        # self.toggle_play_pub_.publish(Bool(data=True)) # start playing
+        # self.toggle_play_pub_.publish(Bool(data=True)) # start playing
+        # self.toggle_play_pub_.publish(Bool(data=True)) # start playing
         rospy.loginfo("##### Pose Estimator Ready #####")
     
     def rgb_depth_vins_callback_(self, rgb, depth_msg, cam2world_pose):
@@ -243,6 +249,7 @@ class poseEstimator:
             ### FSM
             if self.STATE == STATES.INIT:
                 self.STATE = STATES.GD_Setting
+                self.toggle_play_pub_.publish(Bool(data=False)) # stop playing
                 gdRes = None
                 if USE_DINO:
                     gdRes = self.getGDINO(rgb)
@@ -252,6 +259,7 @@ class poseEstimator:
                 ## miss
                 if gdRes is None:
                     self.STATE = STATES.INIT
+                    self.toggle_play_pub_.publish(Bool(data=True)) # start playing
                     continue
                 ## get gdRes
                 bbox = gdRes.tolist()
@@ -260,6 +268,7 @@ class poseEstimator:
                 if bbox is None or len(bbox) == 0:
                     rospy.logwarn("No object detected")
                     self.STATE = STATES.INIT
+                    self.toggle_play_pub_.publish(Bool(data=True)) # start playing
                 else:
                     rospy.logdebug("Object detected")
                     if self.debug >= 1:
@@ -279,9 +288,11 @@ class poseEstimator:
                     #     bbox=bbox)
                     
                     self.STATE = STATES.WAITING_FP
+                    self.toggle_play_pub_.publish(Bool(data=True)) # start playing
                     self._rgb_depth_can2world_que = deque(maxlen=self.window_length)
             
             elif self.STATE == STATES.WAITING_FP:
+                self.toggle_play_pub_.publish(Bool(data=False)) # stop playing
                 # start = time.time()
                 state = self.mixformer_tracker.track(rgb, depth) # xywh
                 end = time.time()
@@ -290,6 +301,7 @@ class poseEstimator:
                 if state is None:
                     rospy.logdebug('No object detected')
                     self.STATE = STATES.INIT
+                    self.toggle_play_pub_.publish(Bool(data=True)) # start playing
                     continue
                 bbox_mask = bbox2mask(state, width, height)
                 
@@ -313,6 +325,7 @@ class poseEstimator:
                 if track_Position is None or track_center is None:
                     rospy.logdebug('No object detected')
                     self.STATE = STATES.INIT
+                    self.toggle_play_pub_.publish(Bool(data=True)) # start playing
                     continue
                 # crop_rgb = rgb_crop_with_bbox(rgb, state, self.crop_ratio)
                 # obj2cams = self.pose_predictor.init_query(crop_rgb)
@@ -327,6 +340,7 @@ class poseEstimator:
                 # # self.pose_obv = homogeneous_to_xyz_euler(self.pose_world)
                 # self.pose_obv = homogeneous_to_quaternion(self.pose_world)
                 self.STATE = STATES.TRACKING
+                self.toggle_play_pub_.publish(Bool(data=True)) # start playing
                 
             elif self.STATE == STATES.TRACKING:
                 last_obj2cam = self.get_curr_guess_obj2cam_pose(self.last_obj2world, T)

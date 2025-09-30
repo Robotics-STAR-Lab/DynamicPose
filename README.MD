@@ -32,10 +32,11 @@
         </em>
         </strong>
     </p>
-     <a href="https://arxiv.org/abs/2508.11950"><img alt="Paper" src="https://img.shields.io/badge/Paper-arXiv-red"/></a>
-    <!-- <a href='https://robotics-star.com/ApexNav'><img src='https://img.shields.io/badge/Project_Page-ApexNav-green' alt='Project Page'></a> -->
+    <a href="https://arxiv.org/abs/2508.11950">
+      <img alt="Paper" src="https://img.shields.io/badge/Paper-arXiv-red?style=flat"/>
+    </a>
     <a href="http://xhslink.com/a/U3WUSAKxpJTdb">
-        <img src="https://img.shields.io/badge/▶️-Video-blue?style=for-the-badge" alt="Video Link" />
+        <img src="https://img.shields.io/badge/▶️-Video-blue?style=flat" alt="Video Link" />
     </a>
 
 <br>
@@ -48,17 +49,23 @@
   <img src="./assets/top.jpg" alt="TOP" width="800" />
 </div>
 
+---
+## News
+- [30/09/2025]: Release part of the code for DynamicPose.
+- [16/06/2025]: DynamicPose is accepted to *IROS 2025*
+---
+## Introduction
 
-# Introduction
+**[IROS 2025]** This repository maintains the implementation of "DynamicPose: Real-time and Robust 6D Object Pose Tracking for Fast-Moving Cameras and Objects".
+
+Please kindly star ⭐ this project if it helps you. Thanks for your support! 💖
 
 <div align="center">
   <img src="./assets/pipeline.jpg" alt="TOP" />
 </div>
 
 
-Please kindly star ⭐ this project if it helps you. Thanks for your support! 💖
-
-
+---
 ## Demo
 
 Real-world:
@@ -80,11 +87,14 @@ https://github.com/user-attachments/assets/4de948b9-9d42-412a-80cb-8a1b50dcb52b
  </h3>
 </div> -->
 
+---
 ## Install
 ```
 conda create -n dynamicpose python=3.9.19
 conda activate dynamicpose
 conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+pip3 install pycryptodomex 
+pip3 install python-gnupg
 ```
 
 
@@ -133,6 +143,7 @@ python tracking/create_default_local_file.py --workspace_dir . --data_dir ./data
 cd ${YOUR_WORKSPACE_PATH}/src/Dynamic_6D/object_pose_estimator/config/gdino_checkpoints/
 conda activate dynamicpose
 huggingface-cli download IDEA-Research/grounding-dino-tiny --local-dir grounding-dino-tiny
+```
 
 - Potential bug fixes [Optional]
   Using rospy in python=3.9, there are some potential bug:
@@ -149,13 +160,35 @@ huggingface-cli download IDEA-Research/grounding-dino-tiny --local-dir grounding
     sudo ln -s /lib/x86_64-linux-gnu/libffi.so.7.1.0 libffi.so.7
     ```
 
-
+---
 ## Run Demo
+- [Download demo bag](https://pan.baidu.com/s/161YF7J0G94x60W3eEm0hLA?pwd=2299) and extract them under the folder 'demo_bag/'
+  
+- Run Pose Estimator
+  ```
+  cd ${YOUR_WORKSPACE_PATH}/
+  catkin_make
+  roslaunch object_pose_estimator rviz.launch
+  roslaunch object_pose_estimator run_demo.launch
+  ```
 
+  Execution Example: 
+  https://github.com/user-attachments/assets/d5559d35-c16d-479f-84e4-35484f16fa0b
 
+---
 ## Acknowledge
+- https://github.com/NVlabs/FoundationPose
+- https://github.com/Gy920/segment-anything-2-real-time
+- https://github.com/IDEA-Research/GroundingDINO
+- https://github.com/MCG-NJU/MixFormerV2
+- https://github.com/teal024/FoundationPose-plus-plus
 
-
+---
+## Maintenance
+For any technical issues, please contact:
+  * Yixin Zeng(zengyx53@gmail.com)
+  * Tingbang Liang(tingbangliang@gmail.com)
+---
 ## Citation
 ```bibtex
 @article{liang2025dynamicpose,

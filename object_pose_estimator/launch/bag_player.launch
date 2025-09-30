@@ -1,0 +1,5 @@
+<launch>
+    <arg name="bag_file" default="$(find object_pose_estimator)/../demo_bag/2025-03-04-14-16-48.bag" />
+
+    <node pkg="object_pose_estimator" type="startBagPlayer.sh" name="bag_launcher" output="screen" args="$(arg bag_file)" />
+</launch>
