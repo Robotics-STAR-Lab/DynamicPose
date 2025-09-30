@@ -28,7 +28,7 @@ from matplotlib.widgets import RectangleSelector
 
 from foundationpose import _foundationpose_
 from groundingDINO import _grounding_dino_
-from SAM2 import _sam2_
+# from SAM2 import _sam2_
 # from yolo import _yolo_
 from utils import *
 # from coarse_model import PosePredictor
@@ -67,12 +67,12 @@ class poseEstimator:
         
         # needed module
         self.foundationpose = _foundationpose_(config, self.currMeshFile)
-        self.sam2 = _sam2_(config)
+        # self.sam2 = _sam2_(config)
         self.grounding_dino = _grounding_dino_(config, device)
         # self.yolo = _yolo_(config)
         # self.rot_matcher = rotationMatcher.rotMatcher(config, self.foundationpose.K)
         # self.pose_predictor = PosePredictor(config, self.foundationpose.K)
-        # self.mixformer_tracker = _mixformer_tracker_()
+        self.mixformer_tracker = _mixformer_tracker_()
         
         ## module setting
         self.box_threshold = config['GroundingDINO']['box_threshold']
@@ -269,37 +269,37 @@ class poseEstimator:
                         cv2.rectangle(tmp, pt1, pt2, (0, 255, 0), 2)
                         cv2.imwrite(f'{self.debug_dir}/gd_{self.gd_idx}.jpg', tmp)
                         self.gd_idx += 1
-                    # bbox = [bbox[0], bbox[1], bbox[2]-bbox[0], bbox[3]-bbox[1]]
-                    bbox = np.array([[bbox[0], bbox[1]], [bbox[2], bbox[3]]], dtype=np.float32)
-                    # self.mixformer_tracker.init(rgb, bbox)
-                    self.sam2.load_first_frame(rgb)
-                    self.sam2.add_new_prompt(
-                        frame_idx=0, 
-                        obj_id=0, 
-                        bbox=bbox)
+                    bbox = [bbox[0], bbox[1], bbox[2]-bbox[0], bbox[3]-bbox[1]]
+                    # bbox = np.array([[bbox[0], bbox[1]], [bbox[2], bbox[3]]], dtype=np.float32)
+                    self.mixformer_tracker.init(rgb, bbox)
+                    # self.sam2.load_first_frame(rgb)
+                    # self.sam2.add_new_prompt(
+                    #     frame_idx=0, 
+                    #     obj_id=0, 
+                    #     bbox=bbox)
                     
                     self.STATE = STATES.WAITING_FP
                     self._rgb_depth_can2world_que = deque(maxlen=self.window_length)
             
             elif self.STATE == STATES.WAITING_FP:
                 # start = time.time()
-                # state = self.mixformer_tracker.track(rgb, depth) # xywh
-                # end = time.time()
+                state = self.mixformer_tracker.track(rgb, depth) # xywh
+                end = time.time()
 
                 # rospy.logwarn(f"track;{end-start}")
-                # if state is None:
-                #     rospy.logdebug('No object detected')
-                #     self.STATE = STATES.INIT
-                #     continue
-                # bbox_mask = bbox2mask(state, width, height)
+                if state is None:
+                    rospy.logdebug('No object detected')
+                    self.STATE = STATES.INIT
+                    continue
+                bbox_mask = bbox2mask(state, width, height)
                 
-                out_obj_ids, out_mask_logits = self.sam2.track(rgb)
-                bbox_mask = np.zeros((height, width, 1), dtype=np.uint8)
-                for i in range(0, len(out_obj_ids)):
-                    out_mask = (out_mask_logits[i] > 0.0).permute(1, 2, 0).cpu().numpy().astype(
-                        np.uint8
-                    ) * 255
-                    bbox_mask = cv2.bitwise_or(bbox_mask, out_mask)
+                # out_obj_ids, out_mask_logits = self.sam2.track(rgb)
+                # bbox_mask = np.zeros((height, width, 1), dtype=np.uint8)
+                # for i in range(0, len(out_obj_ids)):
+                #     out_mask = (out_mask_logits[i] > 0.0).permute(1, 2, 0).cpu().numpy().astype(
+                #         np.uint8
+                #     ) * 255
+                #     bbox_mask = cv2.bitwise_or(bbox_mask, out_mask)
 
                 
                 # _, track_Position = partialPcd2mainAxis(bbox_mask, depth, self.foundationpose.K)
@@ -333,22 +333,24 @@ class poseEstimator:
                 
                 start = time.time()
                 if not NO_2D_TRACKER:
-                    # state = self.mixformer_tracker.track(rgb, depth) # xywh
-                    # end = time.time()
+                    #########
+                    state = self.mixformer_tracker.track(rgb, depth) # xywh
+                    end = time.time()
 
-                    # rospy.logwarn(f"track : {end-start}")
-                    # if state is None:
-                    #     rospy.logdebug('No object detected')
-                    #     self.STATE = STATES.INIT
-                    # bbox_mask = bbox2mask(state, width, height)
+                    rospy.logwarn(f"track : {end-start}")
+                    if state is None:
+                        rospy.logdebug('No object detected')
+                        self.STATE = STATES.INIT
+                    bbox_mask = bbox2mask(state, width, height)
                     
-                    out_obj_ids, out_mask_logits = self.sam2.track(rgb)
-                    bbox_mask = np.zeros((height, width, 1), dtype=np.uint8)
-                    for i in range(0, len(out_obj_ids)):
-                        out_mask = (out_mask_logits[i] > 0.0).permute(1, 2, 0).cpu().numpy().astype(
-                            np.uint8
-                        ) * 255
-                    bbox_mask = cv2.bitwise_or(bbox_mask, out_mask)
+                    #############
+                    # out_obj_ids, out_mask_logits = self.sam2.track(rgb)
+                    # bbox_mask = np.zeros((height, width, 1), dtype=np.uint8)
+                    # for i in range(0, len(out_obj_ids)):
+                    #     out_mask = (out_mask_logits[i] > 0.0).permute(1, 2, 0).cpu().numpy().astype(
+                    #         np.uint8
+                    #     ) * 255
+                    # bbox_mask = cv2.bitwise_or(bbox_mask, out_mask)
                     
                     print(f'[PoseEstimator] bbox2mask Time = {time.time() - start}')
                     # _, track_Position = partialPcd2mainAxis(bbox_mask, depth, self.foundationpose.K)
@@ -395,6 +397,13 @@ class poseEstimator:
                     kf_mean, kf_covariance = kf.initiate(get_6d_pose_arr_from_mat(self.last_obj2world))
                 # else:
                 #     kf_mean, kf_covariance = kf.predict(kf_mean, kf_covariance)
+                
+                if not NO_2D_TRACKER:
+                    center_pose = pose@np.linalg.inv(self.foundationpose.to_origin)
+                    color = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
+                    bbox_2d = project_3d_box_to_2d_box(self.foundationpose.K, img=color, ob_in_cam=center_pose, bbox=self.foundationpose.bbox, line_color = (255,0,0))
+                    self.mixformer_tracker.update_template(bbox = bbox_2d, K=self.foundationpose.K, img=rgb)
+                
             self.last_timestamp = timestamp
             self.show_curr_state()          
 

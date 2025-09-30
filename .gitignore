@@ -7,7 +7,7 @@ object_pose_estimator/include/segment-anything-2-real-time/build
 object_pose_estimator/include/segment-anything-2-real-time/checkpoints/*.pt
 object_pose_estimator/include/segment-anything-2-real-time/SAM_2.egg-info
 
-# object_pose_estimator/config/gdino_checkpoints/grounding-dino-tiny
+object_pose_estimator/config/gdino_checkpoints/grounding-dino-tiny
 
 object_pose_estimator/debug/FoundationPose/*
 object_pose_estimator/debug/poseEstimator/*

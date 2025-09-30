@@ -124,9 +124,15 @@ python run_demo.py
 ```
 cd ${YOUR_WORKSPACE_PATH}/src/Dynamic_6D/object_pose_estimator/include/MixFormerV2
 conda activate dynamicpose
-pip install tensorboardX jpeg4py lmdb easydict transformers
+pip install tensorboardX jpeg4py lmdb easydict transformers empy
 python tracking/create_default_local_file.py --workspace_dir . --data_dir ./data --save_dir .
 ```
+
+- Grounding DINO
+```
+cd ${YOUR_WORKSPACE_PATH}/src/Dynamic_6D/object_pose_estimator/config/gdino_checkpoints/
+conda activate dynamicpose
+huggingface-cli download IDEA-Research/grounding-dino-tiny --local-dir grounding-dino-tiny
 
 - Potential bug fixes [Optional]
   Using rospy in python=3.9, there are some potential bug:
