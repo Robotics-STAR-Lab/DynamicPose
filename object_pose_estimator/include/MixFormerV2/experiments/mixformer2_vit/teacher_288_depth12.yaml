@@ -1,0 +1,11 @@
+MODEL:
+  VIT_TYPE: base_patch16
+  FEAT_SZ: 72
+  BACKBONE:
+    DEPTH: 12
+    MLP_RATIO: 4
+    PRETRAINED: True
+    PRETRAINED_PATH: './models/mae_pretrain_vit_base.pth'  #'/data0/cyt/experiments/trackmae/models/mae_pretrain_vit_base.pth'
+  HEAD_TYPE: MLP
+  HIDDEN_DIM: 768
+  PREDICT_MASK: False

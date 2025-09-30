@@ -1,0 +1,149 @@
+ABLATION_EXPERIMENT:
+  ## ours
+  NO_VINS: false
+  NO_2D_TRACKER: false
+  NO_KF: false
+  ## foundationpose
+  # NO_VINS: true
+  # NO_2D_TRACKER: true
+  # NO_KF: true
+
+FoundationPose:
+  mesh_file: "/home/niloiv/models/006_mustard_bottle/textured.obj"
+  est_refine_iter: 5
+  track_refine_iter: 3
+  K_path: "../config/cam_K.txt"
+  init_rot_num: 8 # if this num>3, maybe some bugs
+  img_with_pose_topic: '/FoundationPose/estimation'
+  crop_size: 240
+
+Sam2:
+  # sam2_checkpoint: "../include/segment-anything-2-real-time/checkpoints/sam2_hiera_small.pt"
+  # model_cfg: "sam2_hiera_s.yaml"
+  sam2_checkpoint: "../include/segment-anything-2-real-time/checkpoints/sam2_hiera_tiny.pt"
+  model_cfg: "sam2_hiera_t.yaml"
+
+GroundingDINO:
+  # model_id: "IDEA-Research/grounding-dino-tiny"
+  model_id: "../config/gdino_checkpoints/grounding-dino-tiny"
+  box_threshold: 0.5
+  text_threshold: 0.4
+
+Yolo:
+  model_id: "../include/yolo_fine_tune/weights/best.pt"
+  yoloTuneCfg: "../config/yoloTuneCfg.yaml"
+
+PoseEstimator:
+  max_distance: 3.0 # [x, y]
+  publish_distance: 99.0 # the distance that the object pose will be published
+  min_distance: 0.4 # [x, y, z]
+  poseCenter_mask_threshold: 15
+  first_frame_weight: 0.8 # the weight of the first frame in the tracking while estimating the pose
+  init_window_length: 1
+  sam2_checknum: 15
+  window_length: 1
+  tracking_num: 0
+  # sync_time: 0.001    ## sim
+  sync_time: 0.03     ## real
+  mean_window_length: 8
+  downsample_num_fast: 5 # 较远时的跳帧数
+  downsample_num_close: 5 # 较近时的跳帧数
+  downsample_num_change_dist: 0.8 # 跳帧数的距离阈值
+  grasp_bias: # 抓取偏移，相对于物体中心
+   - 0.0
+   - 0.0
+   - 0.0
+  img_crop_width: 300 # according to the center, [-crop_width/2, crop_width/2]
+  img_crop_height: 300 # according to the center, [-crop_height/2, crop_height/2]
+  img_crop_scale: 1.0 # the scale of the crop box
+  occluded_threshold: 0.1
+  crop_ratio: 1.5
+
+# RotationGraph:
+#   neighbor_num: 8
+
+PosePredictor:
+  neighbor_num: 15
+  inplane_step: 30
+  n_views: 40
+  render_ratio: 3.0
+  crop_ratio: 1.5
+  coarse_model_root: "../include/MegaPose/weights"
+
+topics:
+  rgb: "/camera/color/image_raw"
+  depth: "/camera/aligned_depth_to_color/image_raw"
+  # depth: "/camera/depth/image_rect_raw"
+  # depth: "/camera/depth/image_raw"
+  cam_info: "/camera/color/camera_info"
+  odometry: "/vins_fusion/imu_propagate"
+  matcher_mesh: "/mesh_icosphere"
+  matcher_img: "/matcher_img"
+  matcher_cam2obj: "/matcher_cam2obj"
+  traking_result: "/tracking_result"
+
+
+debug: 1 # 0: no other output; 1: topic; 2:save img and scorer
+debug_dir: "../debug"
+
+## it should be: len(mesh_files) == len(taskTexts) == len(cylinder_poses)
+## and mesh_files[i] is the mesh file of the object described by taskTexts[i] at cylinder_poses[i]
+taskTexts:
+
+#  - 'a brown coffee bottle.'     ### costa
+#  - 'a yellow beverage bottle.'  ### vita
+#  - 'a paper cup.'               ### luckin
+#  - 'a black box.'               ### realsense && cuav
+#  - 'a white beverage bottle.'   ### minute
+
+  # - 'vita'
+  # - 'luckin'
+  # - 'nestle'
+  # - 'realsense'
+  # - 'cuav'
+  # - 'costa'
+  # - 'minute'
+
+###### Grounding DINO Prompt
+  #  - 'a electric drill.'
+  # - 'a paper cup.'
+  # - 'a yellow beverage bottle.'  ### vita
+  - 'a yellow plastic bottle.'
+mesh_files:
+
+  # - "../config/models_obj/vita/mesh.obj"
+  # - "../config/models_obj/luckin/mesh.obj"
+  # - "../config/models_obj/nestle/mesh.obj"
+  - "../config/models_obj/realsense/mesh.obj"
+  # - "../config/models_obj/cuav/mesh.obj"
+  # - "../config/models_obj/costa/mesh.obj"
+  # - "../config/models_obj/minute/mesh.obj"
+
+
+  # - "../config/YCBV/006_mustard_bottle/textured.obj"      # mustard_bottle
+  # - "../config/YCBV/011_banana/textured.obj"              # banana  
+  # - "../config/YCBV/003_cracker_box/textured.obj"         # cracker_box
+  # - "../config/YCBV/035_power_drill/textured.obj"         # power_drill
+  # - "../config/YCBV/002_master_chef_can/textured.obj"     # master_chef_can 
+  # - "../config/YCBV/019_pitcher_base/textured.obj"        # pitcher_base 
+  # - "../config/YCBV/061_foam_brick/textured.obj"          # foam_brick   
+  # - "../config/YCBV/005_tomato_soup_can/textured.obj"     # tomato_soup_can
+  # - "../config/YCBV/009_gelatin_box/textured.obj"         # gelatin_box
+  # - "../config/YCBV/010_potted_meat_can/textured.obj"     # potted_meat_can
+  # - "../config/YCBV/025_mug/textured.obj"                 # mug  
+  # - "../config/YCBV/036_wood_block/textured.obj"          # wood_block 
+  # - "../config/YCBV/052_extra_large_clamp/textured.obj"   # extra_large_clamp                     
+  # - "../config/YCBV/008_pudding_box/textured.obj"         # pudding_box  
+
+
+### tmp useless
+  # - "../config/models_obj/cuav/mesh.obj"
+  # - "../config/models_obj/costa/mesh.obj"
+  # - "../config/models_obj/drill/mesh.obj"
+  # - "../config/models_obj/luckin_v2/mesh.obj"
+
+aviod_detect:
+ - 'a grey cube.'
+ - 'floor.'
+ - 'table.'
+ - 'the blue checkered floor.'

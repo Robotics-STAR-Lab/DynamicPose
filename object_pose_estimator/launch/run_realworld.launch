@@ -1,0 +1,6 @@
+<launch>
+
+<include file="$(find object_pose_estimator)/launch/estimate.launch" />
+<!-- <include file="$(find state_manager)/launch/state_manager.launch" /> -->
+
+</launch>

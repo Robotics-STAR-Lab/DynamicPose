@@ -1,0 +1,10 @@
+{"primitives":[
+{"type":"mesh","file":"/home/linbei/workspace/mm/src/AutoGrasp/object_pose_estimator/config/models_obj/realsense/mesh.obj","bsdf":{"type":"lambert","albedo":0.8}},
+{"type": "sphere","transform":{"position":[0.0309978,-0.00145197,0.0229991],"scale":0.0473518},"bsdf":{"type":"lambert","ior":1.3,"albedo":[1,0.6,0.6]}},
+{"type": "sphere","transform":{"position":[0.000541628,-0.00710256,-0.039735],"scale":0.0594998},"bsdf":{"type":"lambert","ior":1.3,"albedo":[1,0.6,0.6]}},
+{"type": "sphere","transform":{"position":[-0.0245512,0.0080882,0.0359581],"scale":0.0378405},"bsdf":{"type":"lambert","ior":1.3,"albedo":[1,0.6,0.6]}},
+{"type": "skydome","temperature": 4777.0,"gamma_scale": 1.0,"turbidity": 3.0,"intensity": 6.0,"sample": true}],
+"camera":{"resolution":[2048,2048],"transform":{"position": [0.8,0.8,0.176543], "look_at": [0,0,0], "up": [0,1,0]},"type":"pinhole","fov":40},
+"integrator": {"min_bounces": 0,"max_bounces": 16,"type": "path_tracer"},
+"renderer": {"scene_bvh": true,"spp": 16,"output_file": "mesh.png"}
+}

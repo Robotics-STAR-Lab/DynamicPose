@@ -1,0 +1,9 @@
+MODEL:
+  VIT_TYPE: base_patch16
+  BACKBONE:
+    DEPTH: 12
+    PRETRAINED: False
+    PRETRAINED_PATH: './models/mae_pretrain_vit_base.pth'  #'/data0/cyt/experiments/trackmae/models/mae_pretrain_vit_base.pth'
+  HEAD_TYPE: CORNER_UP
+  HIDDEN_DIM: 768
+  PREDICT_MASK: False

@@ -1,0 +1,8 @@
+MODEL:
+  VIT_TYPE: large_patch16
+  BACKBONE:
+    PRETRAINED: True
+    PRETRAINED_PATH: '/YOUR/PRETRAINED/VIT/DIR/mae_pretrain_vit_large.pth'
+  HEAD_TYPE: CORNER_UP
+  HIDDEN_DIM: 1024
+  PREDICT_MASK: False

@@ -32,8 +32,8 @@
         </em>
         </strong>
     </p>
-    <!-- <a href="https://arxiv.org/abs/2504.14478"><img alt="Paper" src="https://img.shields.io/badge/Paper-arXiv-red"/></a>
-    <a href='https://robotics-star.com/ApexNav'><img src='https://img.shields.io/badge/Project_Page-ApexNav-green' alt='Project Page'></a> -->
+     <a href="https://arxiv.org/abs/2508.11950"><img alt="Paper" src="https://img.shields.io/badge/Paper-arXiv-red"/></a>
+    <!-- <a href='https://robotics-star.com/ApexNav'><img src='https://img.shields.io/badge/Project_Page-ApexNav-green' alt='Project Page'></a> -->
     <a href="http://xhslink.com/a/U3WUSAKxpJTdb">
         <img src="https://img.shields.io/badge/▶️-Video-blue?style=for-the-badge" alt="Video Link" />
     </a>
@@ -48,16 +48,16 @@
   <img src="./assets/top.jpg" alt="TOP" width="800" />
 </div>
 
---- 
 
-## System Overview
+# Introduction
 
 <div align="center">
   <img src="./assets/pipeline.jpg" alt="TOP" />
 </div>
 
 
----
+Please kindly star ⭐ this project if it helps you. Thanks for your support! 💖
+
 
 ## Demo
 
@@ -70,12 +70,92 @@ Pose Tracking Comparison:
 https://github.com/user-attachments/assets/4de948b9-9d42-412a-80cb-8a1b50dcb52b
 
 
---- 
+<!-- ---  -->
 
-## Code
+<!-- ## Code
 
 <div>
  <h3>
  Coming Soon...
  </h3>
-</div>
+</div> -->
+
+## Install
+```
+conda create -n dynamicpose python=3.9.19
+conda activate dynamicpose
+conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+```
+
+
+- FoundationPose
+  In this step, you should ensure that CUDA_11.8 has been installed.
+```
+// install eigen 3.4.0 [optional]
+cd $HOME && wget -q https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz && \
+tar -xzf eigen-3.4.0.tar.gz && \
+cd eigen-3.4.0 && mkdir build && cd build
+cmake .. -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++14 ..
+sudo make install
+cd $HOME && rm -rf eigen-3.4.0 eigen-3.4.0.tar.gz
+
+// use conda to install the Python environment
+cd ${YOUR_WORKSPACE_PATH}/src/Dynamic_6D/object_pose_estimator/include/FoundationPose
+conda activate dynamicpose
+python -m pip install -r requirements.txt
+python -m pip install --quiet --no-cache-dir git+https://github.com/NVlabs/nvdiffrast.git
+python -m pip install --quiet --no-cache-dir kaolin==0.15.0 -f https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.1.0_cu118.html
+python -m pip install "git+https://github.com/facebookresearch/pytorch3d.git"
+CMAKE_PREFIX_PATH=$CONDA_PREFIX/lib/python3.9/site-packages/pybind11/share/cmake/pybind11 bash build_all_conda.sh
+```
+
+[1]. Download all network weights from [here](https://drive.google.com/drive/folders/1DFezOAD0oD1BblsXVxqDsl8fj0qzB82i?usp=sharing) and put them under the folder `weights/`. For the refiner, you will need `2023-10-28-18-33-37`. For scorer, you will need `2024-01-11-20-02-45`.
+
+[2]. [Download demo data](https://drive.google.com/drive/folders/1pRyFmxYXmAnpku7nGRioZaKrVJtIsroP?usp=sharing) and extract them under the folder `demo_data/`
+
+right now, you can check if FoundationPose is ready by:
+```
+conda activate dynamicpose
+cd ${YOUR_WORKSPACE_PATH}/src/Dynamic_6D/object_pose_estimator/include/FoundationPose
+python run_demo.py
+```
+
+- MixFormerV2
+```
+cd ${YOUR_WORKSPACE_PATH}/src/Dynamic_6D/object_pose_estimator/include/MixFormerV2
+conda activate dynamicpose
+pip install tensorboardX jpeg4py lmdb easydict transformers
+python tracking/create_default_local_file.py --workspace_dir . --data_dir ./data --save_dir .
+```
+
+- Potential bug fixes [Optional]
+  Using rospy in python=3.9, there are some potential bug:
+
+    1) version of libffi:  
+    ```
+    libp11-kit.so.0: undefined symbol: ffi_type_pointer, version LIBFFI_BASE_7.0
+    ```
+    [Solution](https://blog.csdn.net/qq_38606680/article/details/129118491?spm=1001.2014.3001.5506): 
+    ```
+    BASE_ENV_PATH=$(conda info | grep "base environment" | awk '{print $4}')
+    cd $BASE_ENV_PATH/envs/dynamicpose/lib
+    mv ./libffi.so.7 ./libffi.so.7.bak
+    sudo ln -s /lib/x86_64-linux-gnu/libffi.so.7.1.0 libffi.so.7
+    ```
+
+
+## Run Demo
+
+
+## Acknowledge
+
+
+## Citation
+```bibtex
+@article{liang2025dynamicpose,
+  title={DynamicPose: Real-time and Robust 6D Object Pose Tracking for Fast-Moving Cameras and Objects},
+  author={Liang, Tingbang and Zeng, Yixin and Xie, Jiatong and Zhou, Boyu},
+  journal={arXiv preprint arXiv:2508.11950},
+  year={2025}
+}
+```

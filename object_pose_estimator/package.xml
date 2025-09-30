@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>object_pose_estimator</name>
+    <version>0.0.0</version>
+    <description>The mm_isacc_sim package. It can start a gazebo simulation</description>
+
+    <maintainer email="zengyx53@mail2.sysu.edu.cn">linbei</maintainer>
+    <license>TODO</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>std_msgs</build_depend>
+    <build_export_depend>std_msgs</build_export_depend>
+    <exec_depend>std_msgs</exec_depend>
+
+    <!-- The export tag contains other, unspecified, tags -->
+    <export>
+        <!-- Other tools can request additional information be placed here -->
+        <gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}"/>
+    </export>
+</package>

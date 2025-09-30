@@ -1,0 +1,10 @@
+<launch>
+  <node 
+    pkg="object_pose_estimator" 
+    type="pth2trt.sh" 
+    name="pth2trt_node" 
+    output="screen">
+    <param name="use_bash" value="true"/>
+  </node>
+</launch>
+<!-- src/AutoGrasp/object_pose_estimator/scripts/startPoseEstimator.sh -->
