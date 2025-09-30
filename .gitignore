@@ -12,32 +12,10 @@ object_pose_estimator/config/gdino_checkpoints/grounding-dino-tiny
 object_pose_estimator/debug/FoundationPose/*
 object_pose_estimator/debug/poseEstimator/*
 object_pose_estimator/debug/*
-# object_pose_estimator/launch/test.bag
-# object_pose_estimator/scripts/odom_data.txt
-# object_pose_estimator/scripts/*.txt
-
-# object_pose_estimator/scripts/R.txt
-# object_pose_estimator/scripts/P_upd.txt
-# object_pose_estimator/scripts/K_gain.txt
-# object_pose_estimator/config/pose_estimator.yaml
-# object_pose_estimator/scripts/*.doc
-# object_pose_estimator/GT/*
 
 object_pose_estimator/include/FoundationPose/demo_data/*
 object_pose_estimator/include/FoundationPose/weights/*
 
-# Utils/ceres-solver-2.0.0rc1
-# Utils/glog
-
-# vins_modules/VINS-Fusion/output
-# DATASETS/*
-# attachment/*
-# object_pose_estimator/config/models_obj/*
-# object_pose_estimator/include/yolo_fine_tune/dataset
-# object_pose_estimator/include/yolo_fine_tune/debug
-# object_pose_estimator/include/yolo_fine_tune/runs
-# object_pose_estimator/include/yolo_fine_tune/wandb
-# object_pose_estimator/include/yolo_fine_tune/weights/best.p
 
 ##### 3D Models #####
 object_pose_estimator/config/YCBV

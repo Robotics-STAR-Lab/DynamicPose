@@ -77,16 +77,6 @@ Pose Tracking Comparison:
 https://github.com/user-attachments/assets/4de948b9-9d42-412a-80cb-8a1b50dcb52b
 
 
-<!-- ---  -->
-
-<!-- ## Code
-
-<div>
- <h3>
- Coming Soon...
- </h3>
-</div> -->
-
 ---
 ## Install
 ```
