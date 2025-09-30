@@ -163,6 +163,7 @@ huggingface-cli download IDEA-Research/grounding-dino-tiny --local-dir grounding
   ```
 
   Execution Example: 
+  
   https://github.com/user-attachments/assets/d5559d35-c16d-479f-84e4-35484f16fa0b
 
 ---
